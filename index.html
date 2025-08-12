@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Feliz Día de la Nutricionista</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Feliz Día de la Nutricionista" name="description">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --carousel-size: 800px;
+            --page-width: 600px;
+            --page-height: 700px;
+        }
+
+        body {
+            background-image: url('FONDO.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .main-title {
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #000;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+        }
+
+        .carousel-container {
+            width: var(--carousel-size);
+            height: var(--carousel-size);
+            perspective: 1000px;
+            position: relative;
+            transform-style: preserve-3d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel {
+            width: var(--page-width);
+            height: var(--page-height);
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .carousel-item {
+            position: absolute;
+            width: var(--page-width);
+            height: var(--page-height);
+            background: #fffaf6;
+            color: #000;
+            border-radius: 12px;
+            border: 4px solid #333;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            backface-visibility: hidden;
+            opacity: 0;
+            transform: translateY(100px) rotateY(0deg);
+            transition: transform 0.5s, opacity 0.5s;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            transform: translateY(0) rotateY(0deg);
+            z-index: 10;
+        }
+
+        .frame {
+            width: 86%;
+            height: 58%;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            margin-bottom: 18px;
+        }
+
+        .frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .message {
+            text-align: center;
+            background: #fffaf6;
+            padding: 14px 18px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .nav-btn.left { left: 5%; }
+        .nav-btn.right { right: 5%; }
+
+        .thank-you-message {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            background: #282828;
+            border-radius: 12px;
+            max-width: 800px;
+        }
+        .thank-you-message h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: #fff;
+        }
+        .thank-you-message h5 {
+            font-weight: normal;
+            color: #b3b3b3;
+        }
+
+        /* Estilos para el reproductor emergente */
+        .music-player-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: #000;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid #fff;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+        .music-player-popup.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cover {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .meta {
+            text-align: center;
+            color: #fff;
+        }
+        .track-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .artist {
+            font-size: 12px;
+            color: #b3b3b3;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .controls button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .controls svg {
+            width: 25px;
+            height: 25px;
+            fill: #fff;
+        }
+        .play-pause-btn svg {
+            width: 35px;
+            height: 35px;
+        }
+
+        @keyframes rotating {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cover.rotating img {
+            animation: rotating 20s linear infinite;
+        }
+
+        .mute-btn svg {
+            fill: #ccc;
+        }
+
+        @media (max-width: 980px) {
+            .carousel-container {
+                width: 100%;
+                height: 400px;
+            }
+            .carousel-item {
+                width: 300px;
+                height: 400px;
+            }
+            .nav-btn.left { left: 5px; }
+            .nav-btn.right { right: 5px; }
+            .music-player-popup {
+                bottom: 10px;
+                right: 10px;
+                width: 250px;
+            }
+            .main-title { font-size: 2.5rem; }
+            .thank-you-message { margin-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">¡Feliz Día de la Nutricionista! 💖</h1>
+    <h5 class="subtitle">Con mucho cariño</h5>
+
+    <div class="carousel-container">
+        <div class="carousel" id="book-carousel">
+            </div>
+        <button class="nav-btn left" id="prevBtn">◀</button>
+        <button class="nav-btn right" id="nextBtn">▶</button>
+    </div>
+
+    <div class="thank-you-message">
+        <h1>Gracias Por Siempre Dar Lo Mejor De Usted</h1>
+        <h5>Gracias por todo lo que hace y por ser una persona tan increíble en mi vida.</h5>
+    </div>
+
+    <div class="music-player-popup" id="musicPlayerPopup">
+        <div class="cover">
+            <img id="coverImg" src="8.jpeg" alt="Portada de la canción">
+        </div>
+        <div class="meta">
+            <div class="track-title" id="trackTitle">Gonna get this</div>
+            <div class="artist" id="trackArtist">HANNA MONTANA</div>
+        </div>
+        <div class="controls">
+            <button id="muteBtn" class="mute-btn">
+                <svg viewBox="0 0 24 24">
+                    <path id="unmuted-icon" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path>
+                    <path id="muted-icon" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v-2.06c4.01.91 7 4.49 7 8.77s-2.99 7.86-7 8.77v-2.06c1.48-.73 2.5-2.25 2.5-4.02zM3 9v6h4l5 5V4L7 9H3zm13.5-2l-2.5 2.5 2.5 2.5-1 1-2.5-2.5-2.5 2.5-1-1 2.5-2.5-2.5-2.5 1-1 2.5 2.5 2.5-2.5 1 1z" style="display: none;"></path>
+                </svg>
+            </button>
+            <audio id="audio" src="CANCIÓN.mp3" preload="auto" muted></audio>
+            <button id="playPauseBtn" class="play-pause-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const pagesData = [
+            { img: "8.jpeg", message: `<span style="font-family:'Great Vibes',cursive;font-size:28px;">Para la hermosa nutricionista</span><br>La estrella del universo entero y la única obra de arte del universo.` },
+            { img: "14.jpeg", message: "¡Felicidades! Con su dedicación y pasión, no solo cambia hábitos, sino que transforma vidas y hace de este mundo un lugar mucho mejor. Gracias por su invaluable servicio.." },
+            { img: "12.jpeg", message: "Gracias por su entrega, su trabajo cambia vidas." },
+            { img: "13.jpeg", message: "Es inspiración para todas las personas, siga cosechando éxitos." },
+            { img: "10.jpeg", message: "Gracias por los momentos compartidos y su calidez." },
+            { img: "6.jpeg", message: "Se merece lo mejor hoy y siempre." },
+            { img: "14.jpeg", message: "Admiro su compromiso con su profesión. Con su trabajo no solo construye una carrera, sino que contribuye a hacer de este mundo un lugar mejor y eso es muy valioso, Feliz Dia Maravillosa, Linda Y Bella Nutricionista La Amo Con Todo El Cora ♡." },
+        ];
+
+        const carousel = document.getElementById('book-carousel');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const musicPlayerPopup = document.getElementById('musicPlayerPopup');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const audio = document.getElementById('audio');
+        const coverEl = document.querySelector('.cover');
+        const unmutedIcon = document.getElementById('unmuted-icon');
+        const mutedIcon = document.getElementById('muted-icon');
+        let currentItem = 0;
+
+        function createCarouselItems() {
+            pagesData.forEach((page, index) => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item';
+                if (index === 0) item.classList.add('active');
+                item.innerHTML = `
+                    <div class="frame"><img src="${page.img}" alt="Imagen ${index + 1}" /></div>
+                    <div class="message">${page.message}</div>
+                `;
+                carousel.appendChild(item);
+            });
+        }
+
+        function updateCarousel() {
+            const items = document.querySelectorAll('.carousel-item');
+            items.forEach((item, index) => {
+                item.classList.remove('active');
+            });
+            items[currentItem].classList.add('active');
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentItem = (currentItem > 0) ? currentItem - 1 : pagesData.length - 1;
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentItem = (currentItem < pagesData.length - 1) ? currentItem + 1 : 0;
+            updateCarousel();
+        });
+
+        function setPlayPauseIcon(paused) {
+            if (paused) {
+                playPauseBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`;
+                coverEl.classList.remove('rotating');
+            } else {
+                playPauseBtn.innerHTML = `<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+                coverEl.classList.add('rotating');
+            }
+        }
+
+        function toggleMuteIcon() {
+            if (audio.muted) {
+                unmutedIcon.style.display = 'none';
+                mutedIcon.style.display = 'inline';
+            } else {
+                unmutedIcon.style.display = 'inline';
+                mutedIcon.style.display = 'none';
+            }
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                audio.muted = false; // Desmutea el audio al hacer clic en Play
+                toggleMuteIcon();
+            } else {
+                audio.pause();
+            }
+        });
+
+        muteBtn.addEventListener('click', () => {
+            audio.muted = !audio.muted;
+            toggleMuteIcon();
+        });
+
+        audio.addEventListener('play', () => setPlayPauseIcon(false));
+        audio.addEventListener('pause', () => setPlayPauseIcon(true));
+
+        window.addEventListener('load', () => {
+            createCarouselItems();
+            musicPlayerPopup.classList.add('visible');
+            
+            // Intenta reproducir el audio. Esto probablemente lo inicie silenciado.
+            audio.play().then(() => {
+                // Si la reproducción fue exitosa (silenciada)
+                setPlayPauseIcon(false);
+                toggleMuteIcon();
+            }).catch(error => {
+                // Si el navegador bloqueó la reproducción automática, informa al usuario.
+                console.log("El navegador ha bloqueado la reproducción automática. Haz clic en el botón de Play para escuchar la canción.");
+                setPlayPauseIcon(true);
+            });
+        });
+    </script>
+</body>
+</html>
